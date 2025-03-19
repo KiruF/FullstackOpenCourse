@@ -17,7 +17,7 @@ Note left of  server: Server responds with HTTP status code 302, which is URL re
 
 browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
 activate server
-Note right of browser: The browser, as being redirected requests the notes page (the above address)
+Note right of browser: The browser, as being redirected, requests the notes page (the above address)
 
 server -->>browser: HTML document
 deactivate server
