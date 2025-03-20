@@ -16,7 +16,7 @@ Note right of browser: After the note is created, it is added to notes list<br>R
 
 browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
 activate server
-Note right of browser: The browser is submitting the *Form Data* to the server as a JSON file, embedded within the 
+Note right of browser: The browser is submitting the *Form Data* to the server as a JSON file, embedded within the POST request
 
 server-->>browser: The server responds with status code 201 (created).
 deactivate server
