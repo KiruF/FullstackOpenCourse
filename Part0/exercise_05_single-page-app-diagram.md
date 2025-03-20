@@ -33,6 +33,6 @@ activate server
 
 server-->>browser: the JSON file [{"content": "hello world", "date": "2025-03-19T23:12:31.843Z"}, ...]
 deactivate server
-Note right of browser: The browser executes the callback function that renders the notes
+Note right of browser: The browser executes the callback function (from fetched spa.js) that renders the notes
 
 ```
