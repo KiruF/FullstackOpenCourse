@@ -36,8 +36,8 @@ const Statistics = ({
         <StatisticsLine text={neutralWord} value={neutral} />
         <StatisticsLine text={badWord} value={bad} />
         <StatisticsLine text="all" value={all} />
-        <StatisticsLine text={"average"} value={average} />
-        <StatisticsLine text={"positive"} value={positivePecent + ` %`} />
+        <StatisticsLine text="average" value={average} />
+        <StatisticsLine text="positive" value={positivePecent + ` %`} />
       </tbody>
     </table>
   )
