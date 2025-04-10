@@ -5,17 +5,26 @@ const FeedbackButton = ({ value, setValue, buttonName }) =>
     {buttonName}
   </button>
 
-const Feedback = ({ title, value }) =>
-  <div>
-    {title} {value}
-  </div>
+const Statistics = ({
+  goodData: { good, goodWord },
+  neutralData: { neutral, neutralWord },
+  badData: { bad, badWord } }) => {
 
-function ProcessStats({ good, neutral, bad }) {
   const all = good + neutral + bad
   const average = (good - bad) / all
   const positivePecent = good / all * 100
 
-  return { all, average, positivePecent }
+  return (
+    <div>
+      <h1>statistics</h1>
+      <div>{goodWord} {good}</div>
+      <div>{neutralWord} {neutral}</div>
+      <div>{badWord} {bad}</div>
+      <div>all {all}</div>
+      <div>average {average}</div>
+      <div>positive {positivePecent + ` %`}</div>
+    </div>
+  )
 }
 
 const App = () => {
@@ -26,7 +35,6 @@ const App = () => {
   const neutralWord = "neutral"
   const [bad, setBad] = useState(0)
   const badWord = "bad"
-  const { all, average, positivePecent } = ProcessStats({ good, neutral, bad })
 
   return (
     <>
@@ -37,20 +45,10 @@ const App = () => {
         value={neutral} setValue={setNeutral} buttonName={neutralWord} />
       <FeedbackButton
         value={bad} setValue={setBad} buttonName={badWord} />
-      <h1>statistics</h1>
-      <Feedback
-        title={goodWord} value={good} />
-      <Feedback
-        title={neutralWord} value={neutral} />
-      <Feedback
-        title={badWord} value={bad} />
-      <Feedback
-        title={"all"} value={all} />
-      <Feedback
-        title={"average"} value={average} />
-      <Feedback
-        title={"positive"} value={positivePecent + `%`} />
-
+      <Statistics
+        goodData={{ good, goodWord }}
+        neutralData={{ neutral, neutralWord }}
+        badData={{ bad, badWord }} />
     </>
   )
 }
