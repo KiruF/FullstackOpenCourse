@@ -1,14 +1,22 @@
 import { useState } from 'react'
 
-const FeedbackButton = (props) =>
-  <button onClick={() => props.setValue(props.value + 1)}>
-    {props.buttonName}
+const FeedbackButton = ({ value, setValue, buttonName }) =>
+  <button onClick={() => setValue(value + 1)}>
+    {buttonName}
   </button>
 
-const Feedback = (props) =>
-  <p>
-    {props.title} {props.score}
-  </p>
+const Feedback = ({ title, value }) =>
+  <div>
+    {title} {value}
+  </div>
+
+function ProcessStats({ good, neutral, bad }) {
+  const all = good + neutral + bad
+  const average = (good - bad) / all
+  const positivePecent = good / all * 100
+
+  return { all, average, positivePecent }
+}
 
 const App = () => {
   // save clicks of each button to its own state  
@@ -18,32 +26,31 @@ const App = () => {
   const neutralWord = "neutral"
   const [bad, setBad] = useState(0)
   const badWord = "bad"
+  const { all, average, positivePecent } = ProcessStats({ good, neutral, bad })
 
   return (
     <>
       <h1>give feedback</h1>
       <FeedbackButton
-        value={good}
-        setValue={setGood}
-        buttonName={goodWord} />
+        value={good} setValue={setGood} buttonName={goodWord} />
       <FeedbackButton
-        value={neutral}
-        setValue={setNeutral}
-        buttonName={neutralWord} />
+        value={neutral} setValue={setNeutral} buttonName={neutralWord} />
       <FeedbackButton
-        value={bad}
-        setValue={setBad}
-        buttonName={badWord} />
+        value={bad} setValue={setBad} buttonName={badWord} />
       <h1>statistics</h1>
       <Feedback
-        title={goodWord}
-        score={good} />
+        title={goodWord} value={good} />
       <Feedback
-        title={neutralWord}
-        score={neutral} />
+        title={neutralWord} value={neutral} />
       <Feedback
-        title={badWord}
-        score={bad} />
+        title={badWord} value={bad} />
+      <Feedback
+        title={"all"} value={all} />
+      <Feedback
+        title={"average"} value={average} />
+      <Feedback
+        title={"positive"} value={positivePecent + `%`} />
+
     </>
   )
 }
