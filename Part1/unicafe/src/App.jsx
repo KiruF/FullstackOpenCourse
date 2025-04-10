@@ -5,15 +5,18 @@ const FeedbackButton = ({ value, setValue, buttonName }) =>
     {buttonName}
   </button>
 
+const StatisticsLine = ({ text, value }) =>
+  <div>{text} {value}</div>
+
 const Statistics = ({
   goodData: { good, goodWord },
   neutralData: { neutral, neutralWord },
   badData: { bad, badWord } }) => {
 
-  if (good === 0 && neutral === 0 && bad === 0){
+  if (good === 0 && neutral === 0 && bad === 0) {
     return (
-      <div>        
-        <p1>No feedback given</p1>
+      <div>
+        No feedback given
       </div>
     )
   }
@@ -23,13 +26,13 @@ const Statistics = ({
   const positivePecent = good / all * 100
 
   return (
-    <div>      
-      <div>{goodWord} {good}</div>
-      <div>{neutralWord} {neutral}</div>
-      <div>{badWord} {bad}</div>
-      <div>all {all}</div>
-      <div>average {average}</div>
-      <div>positive {positivePecent + ` %`}</div>
+    <div>
+      <StatisticsLine text={goodWord} value={good} />
+      <StatisticsLine text={neutralWord} value={neutral} />
+      <StatisticsLine text={badWord} value={bad} />
+      <StatisticsLine text="all" value={all} />
+      <StatisticsLine text={"average"} value={average} />
+      <StatisticsLine text={"positive"} value={positivePecent + ` %`} />
     </div>
   )
 }
