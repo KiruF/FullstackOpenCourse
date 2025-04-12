@@ -15,7 +15,7 @@ const App = () => {
     'The only way to go fast, is to go well.'
   ]
 
-  const maxIndex = anecdotes.length - 1
+  const maxIndex = anecdotes.length
 
   const [selected, setSelected] = useState(GetRandomInt(maxIndex))
 
