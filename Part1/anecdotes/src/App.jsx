@@ -18,8 +18,9 @@ const App = () => {
   const maxIndex = anecdotes.length
 
   const [selected, setSelected] = useState(GetRandomInt(maxIndex))
+  const [votes, setVotes] = useState(Array(maxIndex).fill(0))
 
-  const onRndButtonClick = () => {
+  const handleNextAnecdote = () => {
     // Initialise random index
     let randomIndex = GetRandomInt(maxIndex)
 
@@ -31,13 +32,25 @@ const App = () => {
     setSelected(randomIndex)
   }
 
+  const handleVote = () =>{
+    const votesCopy = [...votes]
+    votesCopy[selected]++
+
+    setVotes(votesCopy)
+  }
+
   return (
     <div>
 
       <p>{anecdotes[selected]}</p>
+      <p>{`has ${votes[selected]} votes`}</p>
 
-      <button onClick={onRndButtonClick}>
-        next software development piece of wisdom, please
+      <button onClick={handleVote}>
+        vote
+      </button>
+
+      <button onClick={handleNextAnecdote}>
+        next anecdote
       </button>
     </div>
   )
