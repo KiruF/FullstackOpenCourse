@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
-const FeedbackButton = ({ value, setValue, buttonName }) =>
-  <button onClick={() => setValue(value + 1)}>
+const FeedbackButton = ({ onClick, buttonName }) =>
+  <button onClick={onClick}>
     {buttonName}
   </button>
 
@@ -56,11 +56,11 @@ const App = () => {
     <>
       <h1>give feedback</h1>
       <FeedbackButton
-        value={good} setValue={setGood} buttonName={goodWord} />
+        onClick={() => setGood(good + 1)} buttonName={goodWord} />
       <FeedbackButton
-        value={neutral} setValue={setNeutral} buttonName={neutralWord} />
+        onClick={() => setNeutral(neutral + 1)} buttonName={neutralWord} />
       <FeedbackButton
-        value={bad} setValue={setBad} buttonName={badWord} />
+        onClick={() => setBad(bad + 1)} buttonName={badWord} />
       <h1>statistics</h1>
       <Statistics
         goodData={{ good, goodWord }}
