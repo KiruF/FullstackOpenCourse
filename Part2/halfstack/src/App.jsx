@@ -33,7 +33,7 @@ const App = () => {
   return (
     <div>
       <Course course={course} />
-      <TotalExercises exercises={course.parts.map(part => part.exercises)} />
+      <TotalExercises parts={course.parts} />
     </div>
   )
 }

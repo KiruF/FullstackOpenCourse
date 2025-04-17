@@ -1,15 +1,12 @@
-const Sum = (numbers) => {
-    let sum = 0
-    numbers.forEach(number => {
-        sum += number
-    })
+const TotalExercises = ({ parts }) => {
 
-    return sum
+    const initialValue = 0
+    const total =
+        parts.reduce((sum, part) => sum + part.exercises, initialValue)
+
+    return (
+        <p><b>{`total of ${total} exercises`}</b></p>
+    )
 }
-
-const TotalExercises = ({ exercises }) =>
-    <p>
-        <b>{`total of ${Sum(exercises)} exercises`}</b>
-    </p>
 
 export default TotalExercises
