@@ -1,46 +1,47 @@
 import Course from './components/Course'
+import {useId} from 'react'
 
 const App = () => {
   const courses = [
     {
       name: 'Half Stack application development',
-      id: 1,
+      id: useId(),
       parts: [
         {
           name: 'Fundamentals of React',
           exercises: 10,
-          id: 1
+          id: useId()
         },
         {
           name: 'Using props to pass data',
           exercises: 7,
-          id: 2
+          id: useId()
         },
         {
           name: 'State of a component',
           exercises: 14,
-          id: 3
+          id: useId()
         },
         {
           name: 'Redux',
           exercises: 11,
-          id: 4
+          id: useId()
         }
       ]
     },
     {
       name: 'Node.js',
-      id: 2,
+      id: useId(),
       parts: [
         {
           name: 'Routing',
           exercises: 3,
-          id: 1
+          id: useId()
         },
         {
           name: 'Middlewares',
           exercises: 7,
-          id: 2
+          id: useId()
         }
       ]
     }
