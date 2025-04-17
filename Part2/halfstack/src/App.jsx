@@ -1,4 +1,6 @@
 import Course from './components/Course'
+import TotalExercises from './components/TotalExercises'
+import { useId } from 'react';
 
 const App = () => {
   const course = {
@@ -8,22 +10,32 @@ const App = () => {
       {
         name: 'Fundamentals of React',
         exercises: 10,
-        id: 1
+        id: useId()
       },
       {
         name: 'Using props to pass data',
         exercises: 7,
-        id: 2    
+        id: useId()
       },
       {
         name: 'State of a component',
         exercises: 14,
-        id: 3
+        id: useId()
+      },
+      {
+        name: 'Redux',
+        exercises: 11,
+        id: useId()
       }
     ]
-  }
+  }    
 
-  return <Course course={course} />
+  return (
+    <div>
+      <Course course={course} />
+      <TotalExercises exercises={course.parts.map(part => part.exercises)} />
+    </div>
+  )
 }
 
 export default App
