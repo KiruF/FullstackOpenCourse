@@ -1,6 +1,9 @@
 import { useState } from 'react'
 
 const App = () => {
+
+  const title = 'Phonebook'
+
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas' }
   ])
@@ -9,8 +12,13 @@ const App = () => {
   const addName = (event) => {
     event.preventDefault()
 
-    if (newName.length === 0){
-      alert('Enter a name, please, before adding a new Person to the phonebook')
+    if (newName.length === 0) {
+      alert(`Enter a name, please, before adding a new Person to the ${title.toLowerCase()}`)
+      return
+    }
+
+    if (persons.find(person => person.name === newName)) {
+      alert(`${newName} is already added to the ${title.toLowerCase()}`)
       return
     }
 
@@ -24,7 +32,7 @@ const App = () => {
   return (
     <div>
 
-      <h2>Phonebook</h2>
+      <h2>{title}</h2>
       <form onSubmit={addName}>
         <div>
           name: <input
