@@ -1,7 +1,36 @@
 import { useState } from 'react'
 
-const App = () => {
+const Filter = ({ value, onValueChange }) =>
+  <div>filter shown with
+    <input
+      value={value}
+      onChange={onValueChange} />
+  </div>
 
+const PersonForm = (props) =>
+  <form onSubmit={props.addPerson}>
+    <div>
+      name: <input
+        value={props.name}
+        onChange={props.nameChangeHandler} />
+    </div>
+    <div>
+      number: <input
+        value={props.number}
+        onChange={props.numberChangeHandler} />
+    </div>
+    <div>
+      <button type="submit">add</button>
+    </div>
+  </form>
+
+const Persons = ({ people }) =>
+  people.map(contact =>
+    <div key={contact.id}>
+      {contact.name} {contact.number}
+    </div>)
+
+const App = () => {
   const title = 'Phonebook'
 
   const [persons, setPersons] = useState([
@@ -54,48 +83,27 @@ const App = () => {
     setNewNumber('')
   }
 
-  const handleNewNameInput = (event) =>
-    setNewName(event.target.value)
-
-  const handleNewNumberInput = (event) =>
-    setNewNumber(event.target.value)
-
-  const handleFilterInput = (event) =>
-    setFilter(event.target.value)
-
   return (
     <div>
 
       <h2>{title}</h2>
-      <div>filter shown with
-        <input
-          value={filter}
-          onChange={handleFilterInput}
-        />
-      </div>
 
-      <h2>add a new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input
-            value={newName}
-            onChange={handleNewNameInput} />
-        </div>
-        <div>
-          number: <input
-            value={newNumber}
-            onChange={handleNewNumberInput} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <Filter
+        value={filter}
+        onValueChange={(event) => setFilter(event.target.value)} />
 
-      <h2>Numbers</h2>
-      {getContactsToShow().map(contact =>
-        <div key={contact.id}>
-          {contact.name} {contact.number}
-        </div>)}
+      <h3>Add a new</h3>
+
+      <PersonForm
+        name={newName}
+        nameChangeHandler={(event) => setNewName(event.target.value)}
+        number={newNumber}
+        numberChangeHandler={(event) => setNewNumber(event.target.value)}
+        addPerson={addPerson} />
+
+      <h3>Numbers</h3>
+
+      <Persons people={getContactsToShow()} />
 
     </div>
   )
