@@ -5,9 +5,9 @@ import PersonForm from './components/PersonForm'
 
 const App = () => {
   const title = 'Phonebook'
-  
-  const [people, setPeople] = useState([])  
-  const [newName, setNewName] =  useState('')
+
+  const [people, setPeople] = useState([])
+  const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
 
@@ -30,7 +30,7 @@ const App = () => {
   }
 
   const addPerson = (event) => {
-    event.preventDefault()    
+    event.preventDefault()
 
     if (newName.length === 0) {
       alert(`Enter a name, please, before adding a new Person to the ${title.toLowerCase()}!`)
@@ -98,10 +98,13 @@ const Filter = ({ value, onValueChange }) =>
 
 const People = ({ people }) => {
   return (
-    people.map((person) =>
-    (<Person
-      key={person.id}
-      person={person} />)
-    )
+    <ul>
+      {
+        people.map((person) =>
+        (<Person
+          key={person.id}
+          person={person} />))
+      }
+    </ul>
   )
 }
