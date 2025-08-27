@@ -14,12 +14,22 @@ const create = newObject => {
 
 const update = (id, newObject) => {
     return axios
-        .put(`${baseUrl}/${id}`, newObject)
+        .put(baseUrlCombineWith(id), newObject)
         .then(response => response.data)
 }
+
+const deleteAt = (id) => {
+    return axios
+        .delete(baseUrlCombineWith(id))
+        .then(response => response.data)
+}
+
+const baseUrlCombineWith = (address) =>
+    `${baseUrl}/${address}`
 
 export default {
     getAll,
     create,
-    update
+    update,
+    deleteAt
 }

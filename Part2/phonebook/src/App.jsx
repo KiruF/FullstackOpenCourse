@@ -14,7 +14,7 @@ const App = () => {
   useEffect(() => {
     peopleService
       .getAll()
-      .then((allPeople) =>
+      .then(allPeople =>
         setPeople(allPeople))
   }, [])
   console.log('render', people.length, 'people')
@@ -24,6 +24,44 @@ const App = () => {
     return (filter.length === 0
       ? people
       : people.filter(person => person.name.toLowerCase().includes(filterLower))
+    )
+  }
+
+  const deletePerson = person => {
+    const shouldDelete = window.confirm(`Are you sure, you would like to Delete ${person.name}?`)
+    if (!shouldDelete)
+      return
+
+    const id = person.id
+    console.log(`deleting at id: ${id}`)
+    peopleService
+      .deleteAt(id)
+      .then(deletedPerson => {
+        console.log(deletedPerson)
+        setPeople(people
+          .filter(person => person.id != deletedPerson.id))
+      })
+  }
+
+  const Filter = ({ value, onValueChange }) =>
+    <div>filter shown with
+      <input
+        value={value}
+        onChange={onValueChange} />
+    </div>
+
+  const People = ({ people }) => {
+    return (
+      <ul>
+        {
+          people.map((person) =>
+          (<Person
+            key={person.id}
+            person={person}
+            deletionHandler={() => deletePerson(person)} />)
+          )
+        }
+      </ul>
     )
   }
 
@@ -93,23 +131,3 @@ const App = () => {
 }
 
 export default App
-
-const Filter = ({ value, onValueChange }) =>
-  <div>filter shown with
-    <input
-      value={value}
-      onChange={onValueChange} />
-  </div>
-
-const People = ({ people }) => {
-  return (
-    <ul>
-      {
-        people.map((person) =>
-        (<Person
-          key={person.id}
-          person={person} />))
-      }
-    </ul>
-  )
-}
