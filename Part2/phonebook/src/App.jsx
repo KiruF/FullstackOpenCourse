@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import Person from './components/Person'
 import PersonForm from './components/PersonForm'
-
-const personsUrl = 'http://localhost:3001/persons'
+import peopleService from './services/people'
 
 const App = () => {
   const title = 'Phonebook'
@@ -14,12 +12,10 @@ const App = () => {
   const [filter, setFilter] = useState('')
 
   useEffect(() => {
-    console.log('fetching using effect hook')
-    axios.get(personsUrl)
-      .then((response) => {
-        console.log('promise fulfilled')
-        setPeople(response.data)
-      })
+    peopleService
+      .getAll()
+      .then((allPeople) =>
+        setPeople(allPeople))
   }, [])
   console.log('render', people.length, 'people')
 
@@ -59,12 +55,12 @@ const App = () => {
       number: newNumber
     }
 
-    axios
-      .post(personsUrl, newPerson)
-      .then(response => {
-        console.log(response)
-        
-        setPeople(people.concat(response.data))
+    peopleService
+      .create(newPerson)
+      .then(registeredPerson => {
+        console.log(registeredPerson)
+
+        setPeople(people.concat(registeredPerson))
         setNewName('')
         setNewNumber('')
       })
