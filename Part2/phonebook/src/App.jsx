@@ -3,6 +3,8 @@ import axios from 'axios'
 import Person from './components/Person'
 import PersonForm from './components/PersonForm'
 
+const personsUrl = 'http://localhost:3001/persons'
+
 const App = () => {
   const title = 'Phonebook'
 
@@ -13,7 +15,7 @@ const App = () => {
 
   useEffect(() => {
     console.log('fetching using effect hook')
-    axios.get('http://localhost:3001/persons')
+    axios.get(personsUrl)
       .then((response) => {
         console.log('promise fulfilled')
         setPeople(response.data)
@@ -52,13 +54,20 @@ const App = () => {
       return
     }
 
-    setPeople(people.concat({
+    const newPerson = {
       name: newName,
-      number: newNumber,
-      id: people.length + 1
-    }))
-    setNewName('')
-    setNewNumber('')
+      number: newNumber
+    }
+
+    axios
+      .post(personsUrl, newPerson)
+      .then(response => {
+        console.log(response)
+        
+        setPeople(people.concat(response.data))
+        setNewName('')
+        setNewNumber('')
+      })
   }
 
   return (
