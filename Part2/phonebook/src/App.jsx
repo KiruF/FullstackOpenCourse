@@ -33,9 +33,15 @@ const App = () => {
         setPeople(people
           .filter(person => person.id != deletedPerson.id))
       })
+      .catch(error => {
+        alert(`Failed to delete ${person.name}`)
+        console.log(error)
+      })
   }
 
-  const addPerson = () => {
+  const addPerson = (event) => {
+    event.preventDefault()
+
     if (newName.length === 0) {
       alert(`Enter a name, please, before adding a new Person to the ${title.toLowerCase()}!`)
       return
@@ -48,12 +54,15 @@ const App = () => {
 
     const personFoundByName = people
       .find(p => p.name === newName)
-
     const personFoundByPhNum = people
       .find(person => person.number === newNumber)
 
     if (personFoundByName && personFoundByPhNum) {
-      alert(`A Person with ${newNumber} is already added to the ${title.toLowerCase()}`)
+      alert(`${newName} is already added with phone number: ${newNumber}`)
+      return
+    }
+    else if (personFoundByPhNum) {
+      alert(`A Person with ${newNumber} is already added to the ${title.toLowerCase()}.`)
       return
     }
 
@@ -64,7 +73,7 @@ const App = () => {
       if (overridePhNum) {
         const newPerson = { ...personFoundByName, number: newNumber }
         peopleService
-          .update(personFoundByName, newPerson)
+          .update(personFoundByName.id, newPerson)
           .then(updatedPerson => {
             setPeople(people
               .map(person => person.id === personFoundByName.id ? updatedPerson : person))
@@ -114,10 +123,7 @@ const App = () => {
         nameChangeHandler={(event) => setNewName(event.target.value)}
         number={newNumber}
         numberChangeHandler={(event) => setNewNumber(event.target.value)}
-        addPerson={(event) => {
-          event.preventDefault
-          addPerson(newName, newNumber, people, setPeople, setNewName, setNewNumber)
-        }} />
+        addPerson={addPerson} />
 
       <h3>Numbers</h3>
 
@@ -151,14 +157,6 @@ const People = ({ people, deletePerson }) => {
       }
     </ul>
   )
-}
-
-function TryFindByName(people, name) {
-  const person = people.find(p => p.name === name)
-  if (person)
-    return { found: true, person: person }
-  else
-    return false
 }
 
 const getContactsToShow = (people, filter) => {
