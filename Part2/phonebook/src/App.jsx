@@ -18,7 +18,6 @@ const App = () => {
       .then(allPeople =>
         setPeople(allPeople))
   }, [])
-  console.log('render', people.length, 'people')
 
   const deletePerson = (person) => {
     const shouldDelete = window.confirm(`Are you sure, you would like to Delete ${person.name}?`)
@@ -33,6 +32,69 @@ const App = () => {
         console.log(deletedPerson)
         setPeople(people
           .filter(person => person.id != deletedPerson.id))
+      })
+  }
+
+  const addPerson = () => {
+    if (newName.length === 0) {
+      alert(`Enter a name, please, before adding a new Person to the ${title.toLowerCase()}!`)
+      return
+    }
+
+    if (newNumber.length === 0) {
+      alert(`Can't add a Person to the ${title.toLowerCase()} without a number!`)
+      return
+    }
+
+    const personFoundByName = people
+      .find(p => p.name === newName)
+
+    const personFoundByPhNum = people
+      .find(person => person.number === newNumber)
+
+    if (personFoundByName && personFoundByPhNum) {
+      alert(`A Person with ${newNumber} is already added to the ${title.toLowerCase()}`)
+      return
+    }
+
+    if (personFoundByName) {
+      const overridePhNum = window.confirm(
+        `${personFoundByName.name} is already in the phonebook, replace the old number with a new one?`)
+
+      if (overridePhNum) {
+        const newPerson = { ...personFoundByName, number: newNumber }
+        peopleService
+          .update(personFoundByName, newPerson)
+          .then(updatedPerson => {
+            setPeople(people
+              .map(person => person.id === personFoundByName.id ? updatedPerson : person))
+            setNewName('')
+            setNewNumber('')
+          })
+          .catch(error => {
+            alert(`Failed to override ${personFoundByName.name}'s phone number.`)
+            console.log(error)
+          })
+      }
+
+      return
+    }
+
+    const newPerson = {
+      name: newName,
+      number: newNumber
+    }
+
+    peopleService
+      .create(newPerson)
+      .then(registeredPerson => {
+        setPeople(people.concat(registeredPerson))
+        setNewName('')
+        setNewNumber('')
+      })
+      .catch(error => {
+        alert(`Failed to add ${newName} to the server`)
+        console.log(error)
       })
   }
 
@@ -91,7 +153,7 @@ const People = ({ people, deletePerson }) => {
   )
 }
 
-function findPerson(people, name) {
+function TryFindByName(people, name) {
   const person = people.find(p => p.name === name)
   if (person)
     return { found: true, person: person }
@@ -105,60 +167,4 @@ const getContactsToShow = (people, filter) => {
     ? people
     : people.filter(person => person.name.toLowerCase().includes(filterLower))
   )
-}
-
-const addPerson = (newName, newNumber, people, setPeople, setNewName, setNewNumber) => {
-  if (newName.length === 0) {
-    alert(`Enter a name, please, before adding a new Person to the ${title.toLowerCase()}!`)
-    return
-  }
-
-  if (newNumber.length === 0) {
-    alert(`Can't add a Person to the ${title.toLowerCase()} without a number!`)
-    return
-  }
-
-  const searchByName = findPerson(people, newName)
-  if (searchByName.found) {
-    if (people.find(person => person.number === newNumber)) {
-      alert(`A Person with ${newNumber} is already added to the ${title.toLowerCase()}`)
-      return
-    }
-    const foundPerson = searchByName.person
-    const replace = window.confirm(
-      `${foundPerson.name} is already in the phonebook, replace the old number with a new one?`)
-
-    if (replace) {
-      const newPerson = { ...foundPerson, number: newNumber }
-      peopleService
-        .update(foundPerson.id, newPerson)
-        .then(updatedPerson => {
-          console.log(updatedPerson)
-          setPeople(people.map(person => person.id === foundPerson.id ? updatedPerson : person))
-          setNewName('')
-          setNewNumber('')
-        })
-    }
-    return
-  }
-
-  if (people.find(person => person.number === newNumber)) {
-    alert(`A Person with ${newNumber} is already added to the ${title.toLowerCase()}`)
-    return
-  }
-
-  const newPerson = {
-    name: newName,
-    number: newNumber
-  }
-
-  peopleService
-    .create(newPerson)
-    .then(registeredPerson => {
-      console.log(registeredPerson)
-
-      setPeople(people.concat(registeredPerson))
-      setNewName('')
-      setNewNumber('')
-    })
 }
