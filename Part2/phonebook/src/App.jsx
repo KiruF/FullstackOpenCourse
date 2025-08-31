@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Person from './components/Person'
 import PersonForm from './components/PersonForm'
 import peopleService from './services/people'
+import Notification from './components/Notification'
 
 const title = 'Phonebook'
 
@@ -11,6 +12,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [succMessage, setSuccMessage] = useState(null)
 
   useEffect(() => {
     peopleService
@@ -37,6 +39,13 @@ const App = () => {
         alert(`Failed to delete ${person.name}`)
         console.log(error)
       })
+  }
+
+  const notifyUser = (message) => {
+    setSuccMessage(message)
+    setTimeout(() => {
+      setSuccMessage(null)
+    }, 3000);
   }
 
   const addPerson = (event) => {
@@ -79,6 +88,7 @@ const App = () => {
               .map(person => person.id === personFoundByName.id ? updatedPerson : person))
             setNewName('')
             setNewNumber('')
+            notifyUser(`${updatedPerson.name}'s phone number updated successfylly.`)
           })
           .catch(error => {
             alert(`Failed to override ${personFoundByName.name}'s phone number.`)
@@ -100,6 +110,7 @@ const App = () => {
         setPeople(people.concat(registeredPerson))
         setNewName('')
         setNewNumber('')
+        notifyUser(`Added ${newPerson.name}.`)
       })
       .catch(error => {
         alert(`Failed to add ${newName} to the server`)
@@ -111,6 +122,8 @@ const App = () => {
     <div>
 
       <h2>{title}</h2>
+
+      <Notification message={succMessage}/>
 
       <Filter
         value={filter}
