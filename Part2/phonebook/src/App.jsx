@@ -3,6 +3,7 @@ import Person from './components/Person'
 import PersonForm from './components/PersonForm'
 import peopleService from './services/people'
 import Notification from './components/Notification'
+import NotificationFlag from './components/notificationFlags.js'
 
 const title = 'Phonebook'
 
@@ -12,7 +13,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
-  const [succMessage, setSuccMessage] = useState(null)
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     peopleService
@@ -20,6 +21,14 @@ const App = () => {
       .then(allPeople =>
         setPeople(allPeople))
   }, [])
+
+  const getContactsToShow = () => {
+    const filterLower = filter.toLowerCase()
+    return (filter.length === 0
+      ? people
+      : people.filter(person => person.name.toLowerCase().includes(filterLower))
+    )
+  }
 
   const deletePerson = (person) => {
     const shouldDelete = window.confirm(`Are you sure, you would like to Delete ${person.name}?`)
@@ -31,20 +40,19 @@ const App = () => {
     peopleService
       .deleteAt(id)
       .then(deletedPerson => {
-        console.log(deletedPerson)
         setPeople(people
           .filter(person => person.id != deletedPerson.id))
       })
       .catch(error => {
-        alert(`Failed to delete ${person.name}`)
+        notifyUser(`Failed to delete ${person.name}`, NotificationFlag.Error)
         console.log(error)
       })
   }
 
-  const notifyUser = (message) => {
-    setSuccMessage(message)
+  const notifyUser = (message, flag) => {
+    setNotification({ message, flag })
     setTimeout(() => {
-      setSuccMessage(null)
+      setNotification(null)
     }, 3000);
   }
 
@@ -88,10 +96,13 @@ const App = () => {
               .map(person => person.id === personFoundByName.id ? updatedPerson : person))
             setNewName('')
             setNewNumber('')
-            notifyUser(`${updatedPerson.name}'s phone number updated successfylly.`)
+            notifyUser(
+              `${updatedPerson.name}'s phone number updated successfylly.`,
+              NotificationFlag.Success
+            )
           })
           .catch(error => {
-            alert(`Failed to override ${personFoundByName.name}'s phone number.`)
+            notifyUser(`Failed to override ${personFoundByName.name}'s phone number.`, NotificationFlag.Error)
             console.log(error)
           })
       }
@@ -110,10 +121,13 @@ const App = () => {
         setPeople(people.concat(registeredPerson))
         setNewName('')
         setNewNumber('')
-        notifyUser(`Added ${newPerson.name}.`)
+        notifyUser(
+          `Added ${newPerson.name}.`,
+          NotificationFlag.Success
+        )
       })
       .catch(error => {
-        alert(`Failed to add ${newName} to the server`)
+        notifyUser(`Failed to add ${newName} to the server`, NotificationFlag.Error)
         console.log(error)
       })
   }
@@ -123,7 +137,7 @@ const App = () => {
 
       <h2>{title}</h2>
 
-      <Notification message={succMessage}/>
+      <Notification {...notification} />
 
       <Filter
         value={filter}
@@ -141,7 +155,7 @@ const App = () => {
       <h3>Numbers</h3>
 
       <People
-        people={getContactsToShow(people, filter)}
+        people={getContactsToShow()}
         deletePerson={deletePerson} />
 
     </div>
@@ -169,13 +183,5 @@ const People = ({ people, deletePerson }) => {
         )
       }
     </ul>
-  )
-}
-
-const getContactsToShow = (people, filter) => {
-  const filterLower = filter.toLowerCase()
-  return (filter.length === 0
-    ? people
-    : people.filter(person => person.name.toLowerCase().includes(filterLower))
   )
 }
