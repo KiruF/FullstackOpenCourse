@@ -2,26 +2,24 @@ import CountryProfile from "./CountryProfile"
 
 const SearchResult = ({ searchQuery, getMatchQueryFun, maxQuaryMatchCount }) => {
 
-  const textItalic = { fontStyle: 'italic' }
-
   if (searchQuery.length == 0) {
-    return <div style={textItalic}>
+    return <div className='instructions'>
       Specify filter to find countries by their name.</div>
   }
 
   const matchedNames = getMatchQueryFun()
 
   if (matchedNames.length === 0) {
-    return <div style={textItalic}>
+    return <div className='instructions'>
       No match found, specify another filter.</div>
   }
 
   if (matchedNames.length > maxQuaryMatchCount) {
-    return <div style={textItalic}>
+    return <div className='instructions'>
       Too many matches, specify another filter.</div>
   }
 
-  if (matchedNames.length === 1) {    
+  if (matchedNames.length === 1) {
     return <CountryProfile countryName={matchedNames[0].common} />
   }
 
