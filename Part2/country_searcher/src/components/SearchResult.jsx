@@ -1,3 +1,4 @@
+import CountriesList from "./CountriesList"
 import CountryProfile from "./CountryProfile"
 
 const SearchResult = ({ searchQuery, getMatchQueryFun, maxQuaryMatchCount }) => {
@@ -23,14 +24,7 @@ const SearchResult = ({ searchQuery, getMatchQueryFun, maxQuaryMatchCount }) => 
     return <CountryProfile countryName={matchedNames[0].common} />
   }
 
-  return (
-    <ul>
-      {matchedNames.map(countryName =>
-        <li key={countryName.common}>
-          {countryName.common}
-        </li>)}
-    </ul>
-  )
+  return <CountriesList names={matchedNames} />
 }
 
 export default SearchResult

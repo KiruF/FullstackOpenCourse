@@ -5,3 +5,7 @@ input {
 .instructions {    
     font-style: italic;
 }
+
+button {
+    margin-left: 5px;
+}
