@@ -1,5 +1,6 @@
 import countriesService from '../services/countries'
 import { useState, useEffect } from 'react'
+import WeatherInCapital from './WeatherInCapital'
 
 const CountryProfile = ({ countryName }) => {
 
@@ -37,7 +38,11 @@ const CountryProfile = ({ countryName }) => {
                     )}
             </ul>
 
-            <img src={country.flags['png']} />
+            <img src={country.flags['png']} />         
+
+            <WeatherInCapital
+                capitalName={country.capital}
+                latlng={country.capitalInfo.latlng} />
 
         </div>
     )
