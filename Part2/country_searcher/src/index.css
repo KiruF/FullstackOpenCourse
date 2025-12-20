@@ -1,0 +1,11 @@
+input {
+    margin-left: 5px;
+}
+
+.instructions {    
+    font-style: italic;
+}
+
+button {
+    margin-left: 5px;
+}
