@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 
-let persons = [
+let personsArray = [
     { 
       "id": "1",
       "name": "Arto Hellas", 
@@ -25,17 +25,28 @@ let persons = [
 ]
 
 const root = '/api'
+const personsRoute = `${root}/persons`
 
-app.get(`${root}/persons`, (request, response) => {
-    response.json(persons)
+app.get(personsRoute, (request, response) => {
+    response.json(personsArray)
 })
 
 app.get(`${root}/info`, (reqest, response) => {
-
     const recievalTime = Date()
     response.send(
-        `Phonebook has info for ${persons.length} people<br>${recievalTime}`
+        `Phonebook has info for ${personsArray.length} people<br>${recievalTime}`
     )
+})
+
+app.get(`${personsRoute}/:id`, (request, response) => {
+    const id = request.params.id
+    const person = personsArray
+        .find(person => person.id === id)
+
+    if(person)
+        response.json(person)
+    else
+        response.status(404).end()
 })
 
 const PORT = 3001
