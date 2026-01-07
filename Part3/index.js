@@ -73,22 +73,37 @@ const generateId = () => {
     return String(newId)
 }
 
-app.post(`${personsRoute}`, (request, response) => {
-    const body = request.body
+const validateNewPersonInfo = (name, number) => {
+    if (!name)
+        return {isValid: false, errorMessage: 'name missing'}
 
-    if (!body.name)
-        return response.status(400).json({ error: 'name missing' })
-    else if (!body.number)
-        return response.status(400).json({ error: 'phone number missing' })
+    if (!number)
+        return {isValid: false, errorMessage: 'phone number missing'}
+
+    const nameExists = personsArray
+        .find(person => person.name === name)
+    if(nameExists)
+        return {isValid: false, errorMessage: 'name must be unique'}
+
+    return {isValid: true}
+}
+
+app.post(`${personsRoute}`, (request, response) => {
+    const { name, number } = request.body
+
+    const {isValid, errorMessage} = validateNewPersonInfo(name, number)
+
+    if(!isValid)
+        return response.status(400).json({error: errorMessage})
 
     const newPerson = {
         id: generateId(),
-        name: body.name,
-        number: body.number
+        name: name,
+        number: number
     }
 
     personsArray = personsArray.concat(newPerson)
-    
+
     response.json(newPerson)
 })
 
