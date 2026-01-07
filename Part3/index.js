@@ -1,26 +1,28 @@
 const express = require('express')
 const app = express()
 
+app.use(express.json())
+
 let personsArray = [
-    { 
-      "id": "1",
-      "name": "Arto Hellas", 
-      "number": "040-123456"
+    {
+        "id": "1",
+        "name": "Arto Hellas",
+        "number": "040-123456"
     },
-    { 
-      "id": "2",
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
+    {
+        "id": "2",
+        "name": "Ada Lovelace",
+        "number": "39-44-5323523"
     },
-    { 
-      "id": "3",
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
+    {
+        "id": "3",
+        "name": "Dan Abramov",
+        "number": "12-43-234345"
     },
-    { 
-      "id": "4",
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
+    {
+        "id": "4",
+        "name": "Mary Poppendieck",
+        "number": "39-23-6423122"
     }
 ]
 
@@ -43,7 +45,7 @@ app.get(`${personsRoute}/:id`, (request, response) => {
     const person = personsArray
         .find(person => person.id === id)
 
-    if(person)
+    if (person)
         response.json(person)
     else
         response.status(404).end()
@@ -51,18 +53,46 @@ app.get(`${personsRoute}/:id`, (request, response) => {
 
 app.delete(`${personsRoute}/:id`, (reqest, response) => {
     const id = reqest.params.id
-
     const expectedCount = personsArray.length - 1
+
     personsArray = personsArray
         .filter(person => person.id !== id)
 
-    if(expectedCount === personsArray.length)
+    if (expectedCount === personsArray.length)
         response.status(204).end()
     else
         response.status(404).end()
 })
 
+const generateId = () => {
+    const maxId = 314159
+    const newId = Math.round(
+        Math.random() * maxId
+    )
+
+    return String(newId)
+}
+
+app.post(`${personsRoute}`, (request, response) => {
+    const body = request.body
+
+    if (!body.name)
+        return response.status(400).json({ error: 'name missing' })
+    else if (!body.number)
+        return response.status(400).json({ error: 'phone number missing' })
+
+    const newPerson = {
+        id: generateId(),
+        name: body.name,
+        number: body.number
+    }
+
+    personsArray = personsArray.concat(newPerson)
+    
+    response.json(newPerson)
+})
+
 const PORT = 3001
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`)    
+    console.log(`Server is running on port ${PORT}`)
 })
