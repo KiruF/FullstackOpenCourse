@@ -49,6 +49,19 @@ app.get(`${personsRoute}/:id`, (request, response) => {
         response.status(404).end()
 })
 
+app.delete(`${personsRoute}/:id`, (reqest, response) => {
+    const id = reqest.params.id
+
+    const expectedCount = personsArray.length - 1
+    personsArray = personsArray
+        .filter(person => person.id !== id)
+
+    if(expectedCount === personsArray.length)
+        response.status(204).end()
+    else
+        response.status(404).end()
+})
+
 const PORT = 3001
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)    
