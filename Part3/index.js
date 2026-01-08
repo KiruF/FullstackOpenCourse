@@ -4,7 +4,15 @@ const app = express()
 app.use(express.json())
 
 const morgan = require('morgan')
-app.use(morgan('tiny'))
+
+morgan.token('postData', (req, res) => {
+    return req.method === 'POST'
+        ? JSON.stringify(req.body)
+        : ' '
+})
+
+app.use(morgan(
+    ':method :url :status :res[content-length] - :response-time ms :postData'))
 
 let personsArray = [
     {
@@ -78,26 +86,26 @@ const generateId = () => {
 
 const validateNewPersonInfo = (name, number) => {
     if (!name)
-        return {isValid: false, errorMessage: 'name missing'}
+        return { isValid: false, errorMessage: 'name missing' }
 
     if (!number)
-        return {isValid: false, errorMessage: 'phone number missing'}
+        return { isValid: false, errorMessage: 'phone number missing' }
 
     const nameExists = personsArray
         .find(person => person.name === name)
-    if(nameExists)
-        return {isValid: false, errorMessage: 'name must be unique'}
+    if (nameExists)
+        return { isValid: false, errorMessage: 'name must be unique' }
 
-    return {isValid: true}
+    return { isValid: true }
 }
 
 app.post(`${personsRoute}`, (request, response) => {
     const { name, number } = request.body
 
-    const {isValid, errorMessage} = validateNewPersonInfo(name, number)
+    const { isValid, errorMessage } = validateNewPersonInfo(name, number)
 
-    if(!isValid)
-        return response.status(400).json({error: errorMessage})
+    if (!isValid)
+        return response.status(400).json({ error: errorMessage })
 
     const newPerson = {
         id: generateId(),
